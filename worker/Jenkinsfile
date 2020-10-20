@@ -14,14 +14,20 @@ pipeline{
         }
       }
     }
-    stage(two){
+    stage('test'){
       steps{
         echo 'running unit test on worker app'
+        dir('worker'){
+          sh 'mv clean test'
+        }
       }
     }
-    stage(three){
+    stage('package'){
       steps{
         echo 'packaging worker app'
+        dir('worker'){
+          sh 'maven package'
+        }
      }
     }
   }
