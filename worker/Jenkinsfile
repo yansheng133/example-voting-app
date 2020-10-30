@@ -45,7 +45,7 @@ pipeline{
     always{
       echo 'Building multibranch pipeline for worker is completed.'
     }
-    failiure{
+    failure{
       slackSend(channel: "#jenkins-test", message: "Build Fail - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}>)")
     }
     success{
