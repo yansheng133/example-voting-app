@@ -1,0 +1,43 @@
+pipeline{
+  agent any
+  
+  tools{
+    maven 'NodeJS 8.9.0'
+  }
+  
+  stages{
+    stage('build'){
+      when{
+        changeset "**/result/**"
+      }
+      steps{
+        echo 'compiling result app'
+        dir('worker'){
+          sh 'npm install'
+        }
+      }
+    }
+    stage('test'){
+      when{
+        changeset "**/result/**"
+      }
+      steps{
+        echo 'running unit test on result app'
+        dir('result'){
+          sh 'npm test'
+        }
+      }
+    }
+  }
+  post{
+    always{
+      echo 'Building multibranch pipeline for worker is completed.'
+    }
+    failiure{
+      slackSend(channel: ""jenkins-test, message: "Build Fail - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}>)")
+    }
+    success{
+      slackSend(channel: ""jenkins-test, message: "Build Success - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}>)")
+    }
+  }
+}
