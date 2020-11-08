@@ -1,0 +1,43 @@
+version: "3.7"
+volumes: 
+    db-data:
+networks:
+    instvote:
+      driver: bridge
+services:
+  vote:
+      image: schoolofdevops/vote:latest
+      ports:
+        - 5000:80
+      depends_on:
+        - redis
+      networks:
+        - instvote
+  redis:
+      image: redis:alpine
+      networks:
+        - instvote
+  db:
+      image: postgres:9.4
+      environment:
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_HOST_AUTH_METHOD=trust   
+      volumes: 
+        - "db-data:/var/lib/postgresql/data"
+      networks:
+        - instvote
+  result:
+      image: schoolofdevops/worker:latest
+      ports:
+        - 5001:4000
+      depends_on:
+        - db
+      networks:
+        - instvote
+  worker:
+      image: schoolofdevops/worker:latest
+      depends_on:
+        - db
+        - redis
+      networks:
+        - instvote
