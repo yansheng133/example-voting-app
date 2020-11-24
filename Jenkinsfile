@@ -33,7 +33,7 @@ pipeline{
     stage('Sonarqube'){
       agent any
       environment{
-        sonarpath = tool 'SonarScanner'
+        sonarpath = tool 'SonarQubeScanner'
       }   
       steps{
         echo 'Running Sonarqube Analysis...'
