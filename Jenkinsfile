@@ -30,18 +30,6 @@ pipeline{
         }
      }
     }
-    stage('Sonarqube'){
-      agent any
-      environment{
-        sonarpath = tool 'SonarQubeScanner'
-      }   
-      steps{
-        echo 'Running Sonarqube Analysis...'
-          withSonarQubeEnv('sonar'){
-            sh "${sonarpath}/bin/sonar-scanner -Dproject.setting=sonar-project.properties"
-          }
-      }
-    }
     stage('vote integration'){
       agent any
       when{
@@ -53,6 +41,18 @@ pipeline{
         dir('vote'){
           sh 'integration_test.sh'
         }
+      }
+    }
+    stage('Sonarqube'){
+      agent any
+      environment{
+        sonarpath = tool 'SonarQubeScanner'
+      }   
+      steps{
+        echo 'Running Sonarqube Analysis...'
+          withSonarQubeEnv('sonar'){
+            sh "${sonarpath}/bin/sonar-scanner -Dproject.setting=sonar-project.properties"
+          }
       }
     }
   }
