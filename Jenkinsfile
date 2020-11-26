@@ -35,6 +35,7 @@ pipeline{
       steps{
         echo 'Running integration tests on vote app'
         dir('vote'){
+          sh 'pwd'
           sh 'integration_test.sh'
         }
       }
